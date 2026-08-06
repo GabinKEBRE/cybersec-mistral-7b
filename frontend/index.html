@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberSec AI — Assistant Cybersécurité</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', sans-serif; background:#0b1a2f; color:#e2e8f0; min-height:100vh; }
+
+.header {
+  background:linear-gradient(135deg,#0f2847,#1a3a5c);
+  padding:20px 40px;
+  border-bottom:2px solid #f97316;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.logo { font-size:24px; font-weight:700; color:#f97316; }
+.logo span { color:#38bdf8; }
+.badge { background:#f97316; color:#fff; padding:4px 12px; border-radius:20px; font-size:12px; }
+
+.container { max-width:900px; margin:0 auto; padding:40px 20px; }
+
+.hero { text-align:center; margin-bottom:40px; }
+.hero h1 { font-size:36px; margin-bottom:12px; }
+.hero h1 span { color:#f97316; }
+.hero p { color:#94a3b8; font-size:16px; }
+
+.auth-box {
+  background:#132b44;
+  border:1px solid #1e4060;
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:24px;
+}
+.auth-box label { color:#94a3b8; font-size:14px; display:block; margin-bottom:8px; }
+.auth-box input {
+  width:100%; background:#0b1a2f; border:1px solid #1e4060;
+  color:#e2e8f0; padding:10px 14px; border-radius:8px; font-size:14px;
+  outline:none;
+}
+.auth-box input:focus { border-color:#f97316; }
+
+.chat-box {
+  background:#132b44;
+  border:1px solid #1e4060;
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:24px;
+}
+.chat-box textarea {
+  width:100%; min-height:120px; background:#0b1a2f;
+  border:1px solid #1e4060; color:#e2e8f0; padding:14px;
+  border-radius:8px; font-size:15px; resize:vertical; outline:none;
+  font-family:inherit;
+}
+.chat-box textarea:focus { border-color:#f97316; }
+
+.btn {
+  background:#f97316; color:#fff; border:none; padding:12px 32px;
+  border-radius:8px; font-size:16px; cursor:pointer; font-weight:600;
+  transition:background 0.2s; width:100%; margin-top:12px;
+}
+.btn:hover { background:#ea6c0f; }
+.btn:disabled { background:#4a5568; cursor:not-allowed; }
+
+.result-box {
+  background:#0b1a2f;
+  border:1px solid #1e4060;
+  border-radius:12px;
+  padding:24px;
+  margin-top:24px;
+  display:none;
+}
+.result-box h3 { color:#38bdf8; margin-bottom:16px; font-size:14px; text-transform:uppercase; letter-spacing:1px; }
+.result-content {
+  white-space:pre-wrap; font-family:'Courier New', monospace;
+  font-size:14px; line-height:1.7; color:#e2e8f0;
+}
+.meta { color:#64748b; font-size:12px; margin-top:16px; padding-top:12px; border-top:1px solid #1e4060; }
+
+.examples { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:24px; }
+.example-btn {
+  background:#132b44; border:1px solid #1e4060; color:#94a3b8;
+  padding:12px; border-radius:8px; cursor:pointer; font-size:13px;
+  text-align:left; transition:all 0.2s;
+}
+.example-btn:hover { border-color:#f97316; color:#e2e8f0; }
+
+.loader { text-align:center; padding:20px; color:#64748b; display:none; }
+.spinner { display:inline-block; width:24px; height:24px; border:3px solid #1e4060; border-top-color:#f97316; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:10px; vertical-align:middle; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:32px; }
+.stat { background:#132b44; border:1px solid #1e4060; border-radius:10px; padding:16px; text-align:center; }
+.stat .val { font-size:28px; font-weight:700; color:#f97316; }
+.stat .lbl { font-size:12px; color:#64748b; margin-top:4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Cyber<span>Sec</span> AI</div>
+  <div class="badge">v4 Final — 100% Validation</div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <h1>Assistant <span>Cybersécurité</span> IA</h1>
+    <p>Modèle Mistral-7B spécialisé pentest, audit et cyberdéfense</p>
+  </div>
+
+  <!-- NOUVEAU -->
+<div class="stats">
+    <div class="stat"><div class="val">7B</div><div class="lbl">Paramètres</div></div>
+    <div class="stat"><div class="val">1269</div><div class="lbl">Exemples curatés</div></div>
+    <div class="stat"><div class="val">8/8</div><div class="lbl">Score validation</div></div>
+</div>
+
+  <div class="auth-box">
+    <label>🔑 Clé API</label>
+    <input type="password" id="apiKey" placeholder="Bearer demo-key-gabin-2024" value="demo-key-gabin-2024">
+  </div>
+
+  <div class="chat-box">
+    <textarea id="question" placeholder="Pose ta question cybersécurité...&#10;Ex: Comment exploiter une injection SQL ? Quelles sont les étapes d'un pentest réseau ?"></textarea>
+    <button class="btn" onclick="query()" id="btn">🔍 Analyser</button>
+  </div>
+
+  <div>
+    <p style="color:#64748b;font-size:13px;margin-bottom:12px;">Questions exemples :</p>
+    <div class="examples">
+      <button class="example-btn" onclick="setQ(this)">Comment fonctionne le Kerberoasting dans Active Directory ?</button>
+      <button class="example-btn" onclick="setQ(this)">Quelles sont les techniques de privilege escalation sous Linux ?</button>
+      <button class="example-btn" onclick="setQ(this)">Comment exploiter une SQL injection avec sqlmap ?</button>
+      <button class="example-btn" onclick="setQ(this)">Comment utiliser BloodHound pour trouver un chemin vers Domain Admin ?</button>
+      <button class="example-btn" onclick="setQ(this)">Explique le Pass-the-Hash attack avec mimikatz.</button>
+      <button class="example-btn" onclick="setQ(this)">Comment détecter et exploiter une XXE vulnerability ?</button>
+    </div>
+  </div>
+
+  <div class="loader" id="loader">
+    <span class="spinner"></span> Génération en cours...
+  </div>
+
+  <div class="result-box" id="result">
+    <h3>Réponse du modèle</h3>
+    <div class="result-content" id="answer"></div>
+    <div class="meta" id="meta"></div>
+  </div>
+</div>
+
+<script>
+const API = window.location.origin;
+
+function setQ(btn) {
+  document.getElementById('question').value = btn.textContent;
+}
+
+async function query() {
+  const question = document.getElementById('question').value.trim();
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!question) return alert('Écris une question !');
+
+  document.getElementById('btn').disabled = true;
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+
+  try {
+    const r = await fetch(`${API}/v1/query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({ question, max_tokens: 500 })
+    });
+
+    if (!r.ok) {
+      const err = await r.json();
+      throw new Error(err.detail || `Erreur ${r.status}`);
+    }
+
+    const data = await r.json();
+    document.getElementById('answer').textContent = data.answer;
+    document.getElementById('meta').textContent =
+      `Modèle: ${data.model} | Tokens: ${data.usage.input_tokens} → ${data.usage.output_tokens} | Latence: ${data.usage.latency_ms}ms`;
+    document.getElementById('result').style.display = 'block';
+
+  } catch(e) {
+    alert('Erreur: ' + e.message);
+  } finally {
+    document.getElementById('btn').disabled = false;
+    document.getElementById('loader').style.display = 'none';
+  }
+}
+
+document.getElementById('question').addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter') query();
+});
+</script>
+</body>
+</html>

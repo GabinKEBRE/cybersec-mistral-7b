@@ -1,0 +1,32 @@
+# Modèles et checkpoints
+*.safetensors
+*.bin
+cybersec_mistral_final/
+checkpoints/
+
+# Datasets complets (garder juste l'exemple)
+cybersec_dataset_full.jsonl
+cybersec_dataset_backup*.jsonl
+cybersec_dataset_clean*.jsonl
+
+# Logs
+*.log
+nohup.out
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+.env
+
+# Secrets
+**/token*
+**/api_key*
+push_*.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
